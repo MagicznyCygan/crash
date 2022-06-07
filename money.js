@@ -1,6 +1,6 @@
 const moneyCon = document.getElementById('moneyCon')
 const Wallet = {
-    money: 5000,
+    money: 100000,
     getMoney: function () {
         return this.money
     },
@@ -8,7 +8,7 @@ const Wallet = {
         this.money = this.money + money
     },
     renderMoney: function () {
-        moneyCon.textContent = parseFloat(this.money.toFixed(2))
+        moneyCon.textContent = parseFloat(this.money.toFixed(2)) + '$'
     },
     removeMoney: function (money) {
         this.money = this.money - money

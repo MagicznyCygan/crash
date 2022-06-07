@@ -15,10 +15,24 @@
 <body>
     <div class="container">
         <span class="money" id="moneyCon"></span>
+        <div id="lastCrashes" class="last_crashes"></div>
         <span id="crash"></span>
-        <div id="lastCrashes" class="last_crashes">
+        <span class="cashoutText" id="cashoutText"></span>
+        <div class="inputs">
+            <input class="numberInput" id="playerWalletAmonut" type="number">
+            <label class="autobetLabel">AutoBet<input placeholder="2.0" class="autobetInput" id="autobetInput"
+                    type="text"></label>
         </div>
-        <input class="numberInput" id="playerWalletAmonut" type="number">
+
+        <div class="valueButtons">
+            <button data-value="1" class="value-btn">+1</button>
+            <button data-value="10" class="value-btn">+10</button>
+            <button data-value="100" class="value-btn">+100</button>
+            <button data-value="1000" class="value-btn">+1000</button>
+            <button data-value="1/2" class="value-btn">1/2</button>
+            <button data-value="x2" class="value-btn">x2</button>
+            <button data-value="all" class="value-btn">ALL</button>
+        </div>
         <button class="btn" id="startCrash">Start</button>
         <button class="btn hide" id="cashoutBtn">Cashout</button>
     </div>

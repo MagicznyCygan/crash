@@ -7,6 +7,10 @@ const playerPlayValueCon = document.getElementById('playerWalletAmonut')
 const lastCrashesCon = document.getElementById('lastCrashes')
 const cashoutBtn = document.getElementById('cashoutBtn')
 const moneyCon = document.getElementById('moneyCon')
+const autobetInput = document.getElementById('autobetInput')
+const cashoutTextCon = document.getElementById('cashoutText')
+
+const valueButtons = document.querySelectorAll(".value-btn")
 
 let last_crashes = ['2.0x', '1.01x', '2.0x', '1.92x', '1.50x', '1.44x', '2.5x', '3.0x', '4.0x', '1.01x', '1.50x', '10.0x', '5.0x']
 
@@ -14,6 +18,34 @@ let when_crash
 let crash = 0.99;
 
 Wallet.renderMoney()
+playerPlayValueCon.value = 0
+const inputValue = (value) => {
+    console.log(value)
+    let actualValue = playerPlayValueCon.value
+
+    console.log(actualValue)
+    if (value == '1') {
+        playerPlayValueCon.value = (parseFloat(actualValue) + 1).toFixed(1)
+    }
+    else if (value == '10') {
+        playerPlayValueCon.value = (parseFloat(actualValue) + 10).toFixed(1)
+    }
+    else if (value == '100') {
+        playerPlayValueCon.value = (parseFloat(actualValue) + 100).toFixed(1)
+    }
+    else if (value == '1000') {
+        playerPlayValueCon.value = (parseFloat(actualValue) + 1000).toFixed(1)
+    }
+    else if (value == '1/2') {
+        playerPlayValueCon.value = (parseFloat(actualValue) / 2).toFixed(1)
+    }
+    else if (value == 'x2') {
+        playerPlayValueCon.value = (parseFloat(actualValue) * 2).toFixed(1)
+    }
+    else if (value == 'all') {
+        playerPlayValueCon.value = Wallet.getMoney()
+    }
+}
 
 const whenCrashed = () => {
     let multiplier = Math.floor(Math.random() * 6)
@@ -77,6 +109,7 @@ let is_cashed = false
 const cashout = () => {
     is_cashed = true
     let win_money = (playerPlayValue * parseFloat(crashRounded))
+    cashoutTextCon.textContent = `You cashout at ${crashRounded}x and won ${win_money}$`
     Wallet.setMoney(win_money)
     Wallet.renderMoney()
     console.log(`You cashout at: ${crashRounded}`)
@@ -89,6 +122,9 @@ const showCrash = (crashInterval) => {
     crash = crash + 0.01
     crashRounded = crash.toFixed(2)
     crashCon.innerHTML = crashRounded + 'x'
+    if (crashRounded == parseFloat(autobetInput.value)) {
+        cashout()
+    }
 
     //WHEN CRASHING
     if (crashRounded == when_crash) {
@@ -107,6 +143,7 @@ const showCrash = (crashInterval) => {
         setTimeout(() => {
             Wallet.renderMoney()
             startCrashBtn.classList.toggle('hide')
+            cashoutTextCon.textContent = ""
             crashCon.style.color = 'white'
             crash = 0.99
             crashCon.innerHTML = `1.00x`
@@ -116,6 +153,8 @@ const showCrash = (crashInterval) => {
     }
 
 }
+
+
 
 let interval = 100
 let playerPlayValue
@@ -182,8 +221,15 @@ const startGame = () => {
     }, interval);
 }
 
+
 cashoutBtn.addEventListener('click', cashout)
 startCrashBtn.addEventListener('click', startGame)
+
+valueButtons.forEach(function (button) {
+    let value = button.getAttribute('data-value')
+    button.addEventListener('click', () => inputValue(value))
+});
+
 
 
 
