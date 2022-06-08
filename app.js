@@ -19,6 +19,7 @@ let crash = 0.99;
 
 Wallet.renderMoney()
 playerPlayValueCon.value = 0
+
 const inputValue = (value) => {
     console.log(value)
     let actualValue = playerPlayValueCon.value
@@ -47,28 +48,32 @@ const inputValue = (value) => {
     }
 }
 
+const getRandomNumber = (min, max) => {
+    return (Math.random() * (min - max) + max).toFixed(2)
+}
+
 const whenCrashed = () => {
     let multiplier = Math.floor(Math.random() * 6)
     multiplier = parseFloat(multiplier)
     if (multiplier === 0) {
-        when_crash = (Math.random() * (1.0 - 1.2) + 1.2).toFixed(2) // 1.00 - 1.2
+        when_crash = getRandomNumber(1.0, 1.2)
     }
     else if (multiplier === 1) {
-        when_crash = (Math.random() * (1.21 - 1.5) + 1.5).toFixed(2) // 1.21 - 1.50
+        when_crash = getRandomNumber(1.21, 1.5)
     }
     else if (multiplier === 2) {
-        when_crash = (Math.random() * (1.51 - 3.0) + 3.0).toFixed(2) // 1.51 - 3.00
+        when_crash = getRandomNumber(1.51, 3.0)
     }
     else if (multiplier === 3) {
-        when_crash = (Math.random() * (3.01 - 5.0) + 5.0).toFixed(2) // 3.01 - 5.0
+        when_crash = getRandomNumber(3.01, 5.0)
     }
     else if (multiplier === 4) {
-        when_crash = (Math.random() * (5.01 - 7.0) + 7.0).toFixed(2) // 5.01 - 7.0
+        when_crash = getRandomNumber(5.01, 7.0)
     }
     else if (multiplier === 5) {
-        when_crash = (Math.random() * (7.01 - 10.0) + 10.0).toFixed(2) // 7.01 - 10.0
+        when_crash = getRandomNumber(7.01, 10.0)
     }
-    console.log(when_crash)
+    console.log(`Crash at: ${when_crash}`)
     return when_crash
 }
 
@@ -106,15 +111,19 @@ showLastCrashes()
 let crashRounded
 let is_cashed = false
 
+const testLogs = () => {
+    console.log(`You cashout at: ${crashRounded}`)
+    //console.log(`You Won: ${win_money - playerPlayValue}`)
+    console.log(`In Wallet: ${Wallet.getMoney()}`)
+}
+
 const cashout = () => {
     is_cashed = true
     let win_money = (playerPlayValue * parseFloat(crashRounded))
-    cashoutTextCon.textContent = `You cashout at ${crashRounded}x and won ${win_money}$`
+    cashoutTextCon.textContent = `You cashout at ${crashRounded}x and won ${win_money.toFixed(2)}$`
     Wallet.setMoney(win_money)
     Wallet.renderMoney()
-    console.log(`You cashout at: ${crashRounded}`)
-    console.log(`You Won: ${win_money - playerPlayValue}`)
-    console.log(`In Wallet: ${Wallet.getMoney()}`)
+    testLogs()
     cashoutBtn.classList.toggle('hide')
 }
 
@@ -122,6 +131,8 @@ const showCrash = (crashInterval) => {
     crash = crash + 0.01
     crashRounded = crash.toFixed(2)
     crashCon.innerHTML = crashRounded + 'x'
+
+    //Autobet 
     if (crashRounded == parseFloat(autobetInput.value)) {
         cashout()
     }
@@ -132,14 +143,12 @@ const showCrash = (crashInterval) => {
         last_crashes.shift()
         last_crashes.push(crashRounded + 'x')
         showLastCrashes()
-        console.log('crashuje')
         crashCon.style.color = 'red'
         clearInterval(crashInterval)
         if (!is_cashed) {
             cashoutBtn.classList.toggle('hide')
         }
-
-        //RESTART FUNCTION
+        //RESTART CRASH FUNCTION
         setTimeout(() => {
             Wallet.renderMoney()
             startCrashBtn.classList.toggle('hide')
@@ -161,7 +170,6 @@ let playerPlayValue
 
 const startGame = () => {
     when_crash = whenCrashed()
-
     playerPlayValue = playerPlayValueCon.value
 
     if (playerPlayValue > Wallet.getMoney()) {
